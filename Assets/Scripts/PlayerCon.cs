@@ -24,7 +24,7 @@ public class PlayerCon : Entity
     {
         if (alive)
         {
-            if (!parrying && canParry && Input.GetKey("j"))
+            if (!parrying && canParry && Input.GetButton("Parry"))
             {
                 parrying = true;
                 canParry = false;
@@ -38,12 +38,12 @@ public class PlayerCon : Entity
             if (!parrying || parryMode>0)
             {
 
-                if (Input.GetKeyDown("space") && grounded)
+                if (Input.GetButtonDown("Jump") && grounded)
                 {
                     jumping = true;
                     jumpTime = 0.0f;
                 }
-                if (Input.GetKeyUp("space") && jumping)
+                if (Input.GetButtonUp("Jump") && jumping)
                 {
                     jumping = false;
                     fallSpeed = 0.0f;
@@ -70,13 +70,13 @@ public class PlayerCon : Entity
             }
             if (!parrying || parryMode>0)
             {
-                if (Input.GetKey("d"))
+                if (Input.GetButton("MoveRight"))
                 {
                     faceDir = true;
                     moving = true;
                     moveLeftRight(Time.fixedDeltaTime);
                 }
-                else if (Input.GetKey("a"))
+                else if (Input.GetButton("MoveLeft"))
                 {
                     faceDir = false;
                     moving = true;
@@ -106,10 +106,11 @@ public class PlayerCon : Entity
         return t == 1;
     }
 
-    void endParry()
+    public void endParry(int faceRight)
     {
         parrying = false;
         canSwitch = true;
+        faceDir = faceRight==1;
     }
 
     protected override void gravStep(float time)
@@ -177,7 +178,9 @@ public class PlayerCon : Entity
         canParry = true;
         shouldParry = false;
         invulnerabilityCounter = 0;
+        canSwitch = true;
         this.transform.position = new Vector3(0.8f * LEFT_BOUND, GROUND_LEVEL, 0.0f);
+        Update();
     }
 
     public void endSwitchWindow()
