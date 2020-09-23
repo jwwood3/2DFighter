@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class GameMaster : MonoBehaviour
 {
@@ -22,7 +21,7 @@ public class GameMaster : MonoBehaviour
     {
         if (state == 1)
         {
-
+            
             if (Player.getHealth() <= 0)
             {
                 state = -1;
@@ -34,32 +33,14 @@ public class GameMaster : MonoBehaviour
                 WinScreen.SetActive(true);
             }
         }
-        if (isQuitting())
-        {
-            Application.Quit();
-        }
-        if (parrySwapping())
+        if (Input.GetKeyUp("p"))
         {
             Player.parryMode = parryStates[Player.parryMode];
         }
-    }
-
-    bool parrySwapping()
-    {
-        Keyboard curKeyb = Keyboard.current;
-        Gamepad curGamep = Gamepad.current;
-        bool keyPressing = (curKeyb != null) && (curKeyb.pKey.isPressed);
-        bool gamePressing = (curGamep != null) && (curGamep.leftShoulder.isPressed);
-        return keyPressing || gamePressing;
-    }
-
-    bool isQuitting()
-    {
-        Keyboard curKeyb = Keyboard.current;
-        Gamepad curGamep = Gamepad.current;
-        bool keyPressing = (curKeyb != null) && (curKeyb.escapeKey.isPressed);
-        bool gamePressing = (curGamep != null) && (curGamep.startButton.isPressed);
-        return keyPressing || gamePressing;
+        if (Input.GetKey("escape"))
+        {
+            Application.Quit();
+        }
     }
 
     public void Reset()

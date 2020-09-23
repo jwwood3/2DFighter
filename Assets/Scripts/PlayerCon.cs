@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerCon : Entity
 {
@@ -20,52 +19,12 @@ public class PlayerCon : Entity
         Application.targetFrameRate = 300;
     }
 
-    bool isPressingJump()
-    {
-        Keyboard curKeyb = Keyboard.current;
-        Gamepad curGamep = Gamepad.current;
-        bool keyPressing = (curKeyb != null) && (curKeyb.spaceKey.isPressed || curKeyb.wKey.isPressed);
-        bool gamePressing = (curGamep != null) && (curGamep.buttonSouth.isPressed || curGamep.buttonNorth.isPressed || curGamep.leftStick.up.isPressed || curGamep.dpad.up.isPressed);
-        return keyPressing || gamePressing;
-    }
-
-    bool isPressingParry()
-    {
-        Keyboard curKeyb = Keyboard.current;
-        Gamepad curGamep = Gamepad.current;
-        bool keyPressing = (curKeyb != null) && (curKeyb.jKey.isPressed);
-        bool gamePressing = (curGamep != null) && (curGamep.rightShoulder.isPressed);
-        return keyPressing || gamePressing;
-    }
-
-    int getMoveInput()
-    {
-        Keyboard curKeyb = Keyboard.current;
-        Gamepad curGamep = Gamepad.current;
-        bool leftKeyPressing = (curKeyb != null) && (curKeyb.aKey.isPressed);
-        bool rightKeyPressing = (curKeyb != null) && (curKeyb.dKey.isPressed);
-        bool leftGamePressing = (curGamep != null) && (curGamep.leftStick.left.isPressed || curGamep.dpad.left.isPressed);
-        bool rightGamePressing = (curGamep != null) && (curGamep.leftStick.right.isPressed || curGamep.dpad.right.isPressed);
-        if (leftKeyPressing || leftGamePressing)
-        {
-            return -1;
-        }
-        else if(rightKeyPressing || rightGamePressing)
-        {
-            return 1;
-        }
-        else
-        {
-            return 0;
-        }
-    }
-
     // Update is called once per frame
     void Update()
     {
         if (alive)
         {
-            if (!parrying && canParry && isPressingParry())
+            if (!parrying && canParry && Input.GetKey("j"))
             {
                 parrying = true;
                 canParry = false;
@@ -79,12 +38,12 @@ public class PlayerCon : Entity
             if (!parrying || parryMode>0)
             {
 
-                if (isPressingJump() && grounded)
+                if (Input.GetKeyDown("space") && grounded)
                 {
                     jumping = true;
                     jumpTime = 0.0f;
                 }
-                if (!isPressingJump() && jumping)
+                if (Input.GetKeyUp("space") && jumping)
                 {
                     jumping = false;
                     fallSpeed = 0.0f;
@@ -111,14 +70,13 @@ public class PlayerCon : Entity
             }
             if (!parrying || parryMode>0)
             {
-                int moveCon = getMoveInput();
-                if (moveCon == 1)
+                if (Input.GetKey("d"))
                 {
                     faceDir = true;
                     moving = true;
                     moveLeftRight(Time.fixedDeltaTime);
                 }
-                else if (moveCon == -1)
+                else if (Input.GetKey("a"))
                 {
                     faceDir = false;
                     moving = true;
