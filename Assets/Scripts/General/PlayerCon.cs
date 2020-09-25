@@ -9,6 +9,8 @@ public class PlayerCon : Entity
     [SerializeField] private bool shooting;
     [SerializeField] private bool canParry;
     [SerializeField] private bool canShoot;
+    [SerializeField] private bool startSliding;
+    [SerializeField] private bool sliding;
     [SerializeField] private bool shouldParry;
     [SerializeField] private float iFrames;
     [SerializeField] private float invulnerabilityCounter;
@@ -23,8 +25,19 @@ public class PlayerCon : Entity
     void Start()
     {
         Application.targetFrameRate = 300;
-        //abilities = new bool[] { true, false };// Shoot, Shoot neutral
+        //abilities = new bool[] { true, false, false };// Shoot, Slide, Shoot neutral
         dirs = new int[] { 0, 0 };
+    }
+
+    bool isSliding()
+    {
+        return sliding || startSliding;
+    }
+
+    void startTheSliding()
+    {
+        startSliding = false;
+        sliding = true;
     }
 
     // Update is called once per frame
@@ -45,8 +58,17 @@ public class PlayerCon : Entity
                     shooting = true;
                     canShoot = false;
                 }
+                else if(!isSliding() && Input.GetButton("Slide"))
+                {
+                    startSliding = true;
+                }
+                else if (sliding && Input.GetButton("Slide"))
+                {
+                    sliding = false;
+                    canSwitch = true;
+                }
             }
-            if (Input.GetButtonDown("Jump") && grounded)
+            if (Input.GetButtonDown("Jump") && grounded && !isSliding())
             {
                 jumping = true;
                 jumpTime = 0.0f;
@@ -61,6 +83,8 @@ public class PlayerCon : Entity
         anim.SetBool("parrying", parrying);
         anim.SetBool("shooting", shooting);
         anim.SetBool("canSwitch", canSwitch);
+        anim.SetBool("sliding", sliding);
+        anim.SetBool("startSliding", startSliding);
     }
 
     void FixedUpdate()
@@ -138,7 +162,7 @@ public class PlayerCon : Entity
     {
         int xdir = dirs[0];
         int ydir = dirs[1];
-        if(xdir==0 && ydir == 0 && !abilities[1])
+        if(xdir==0 && ydir == 0 && !abilities[2])
         {
             xdir = faceDir ? 1 : -1;
         }
