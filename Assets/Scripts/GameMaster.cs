@@ -33,10 +33,6 @@ public class GameMaster : MonoBehaviour
                 WinScreen.SetActive(true);
             }
         }
-        if (Input.GetKeyUp("p"))
-        {
-            Player.parryMode = parryStates[Player.parryMode];
-        }
         if (Input.GetKey("escape"))
         {
             Application.Quit();

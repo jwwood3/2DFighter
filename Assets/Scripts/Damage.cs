@@ -7,7 +7,7 @@ public class Damage : MonoBehaviour
     [SerializeField] protected int target;
     [SerializeField] protected int power;
     [SerializeField] protected bool piercing;
-    [SerializeField] protected bool active=true;
+    [SerializeField] protected bool active = true;
 
     public virtual void dealDamage(Entity guy)
     {

@@ -15,6 +15,7 @@ public class Entity : MonoBehaviour
     [SerializeField] protected float jumpSpeed;
     [SerializeField] protected float MAX_JUMP_TIME;
     [SerializeField] protected bool faceDir;
+    [SerializeField] protected int faceUp;
     [SerializeField] protected bool moving;
     [SerializeField] protected int MaxHealth;
     [SerializeField] protected int Health;
@@ -42,6 +43,7 @@ public class Entity : MonoBehaviour
         anim.SetBool("moving", moving);
         anim.SetBool("alive", alive);
         anim.SetBool("got_hit", got_hit);
+        anim.SetInteger("facingVert", faceUp);
     }
 
     // Update is called once per frame

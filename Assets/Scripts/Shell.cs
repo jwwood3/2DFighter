@@ -11,6 +11,10 @@ public class Shell : MonoBehaviour
         if (col.gameObject.tag == "damage")
         {
             Damage source = col.gameObject.GetComponent<Damage>();
+            if (source.getTarget() != 1)
+            {
+                return;
+            }
             if (player.willParry())
             {
                 if (source is Projectile)
@@ -19,7 +23,7 @@ public class Shell : MonoBehaviour
                 }
                 else
                 {
-
+                    source.deactivate();
                 }
             }
             else if (source.isPiercing())

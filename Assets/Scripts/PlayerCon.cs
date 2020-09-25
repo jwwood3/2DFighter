@@ -6,17 +6,25 @@ using UnityEngine;
 public class PlayerCon : Entity
 {
     [SerializeField] private bool parrying;
+    [SerializeField] private bool shooting;
     [SerializeField] private bool canParry;
+    [SerializeField] private bool canShoot;
     [SerializeField] private bool shouldParry;
     [SerializeField] private float iFrames;
     [SerializeField] private float invulnerabilityCounter;
-    [SerializeField] public int parryMode;
     [SerializeField] private bool canSwitch;
+    [SerializeField] private PlayerShot bullet;
+    [SerializeField] private bool[] abilities;
+    [SerializeField] private float xBulletOffset;
+    [SerializeField] private float yBulletOffset;
+    [SerializeField] private int[] dirs;
 
     // Start is called before the first frame update
     void Start()
     {
         Application.targetFrameRate = 300;
+        abilities = new bool[] { true, false };// Shoot, Shoot neutral
+        dirs = new int[] { 0, 0 };
     }
 
     // Update is called once per frame
@@ -24,34 +32,34 @@ public class PlayerCon : Entity
     {
         if (alive)
         {
-            if (!parrying && canParry && Input.GetButton("Parry"))
+            setFacingUp();
+            if (canDoMove())
             {
-                parrying = true;
-                canParry = false;
-                if (parryMode == 0)
+                if (canParry && Input.GetButtonDown("Parry"))
                 {
-                    moving = false;
-                    jumping = false;
+                    parrying = true;
+                    canParry = false;
                 }
-
+                else if (abilities[0] && canShoot && Input.GetButton("Shoot"))
+                {
+                    shooting = true;
+                    canShoot = false;
+                }
             }
-            if (!parrying || parryMode>0)
+            if (Input.GetButtonDown("Jump") && grounded)
             {
-
-                if (Input.GetButtonDown("Jump") && grounded)
-                {
-                    jumping = true;
-                    jumpTime = 0.0f;
-                }
-                if (Input.GetButtonUp("Jump") && jumping)
-                {
-                    jumping = false;
-                    fallSpeed = 0.0f;
-                }
+                jumping = true;
+                jumpTime = 0.0f;
+            }
+            if (Input.GetButtonUp("Jump") && jumping)
+            {
+                jumping = false;
+                fallSpeed = 0.0f;
             }
         }
         base.Update();
         anim.SetBool("parrying", parrying);
+        anim.SetBool("shooting", shooting);
         anim.SetBool("canSwitch", canSwitch);
     }
 
@@ -68,26 +76,21 @@ public class PlayerCon : Entity
                     invulnerable = false;
                 }
             }
-            if (!parrying || parryMode>0)
+            if (Input.GetButton("MoveRight"))
             {
-                if (Input.GetButton("MoveRight"))
-                {
-                    faceDir = true;
-                    moving = true;
-                    moveLeftRight(Time.fixedDeltaTime);
-                }
-                else if (Input.GetButton("MoveLeft"))
-                {
-                    faceDir = false;
-                    moving = true;
-                    moveLeftRight(Time.fixedDeltaTime);
-                }
-                else
-                {
-                    moving = false;
-                }
-
-                
+                faceDir = true;
+                moving = true;
+                moveLeftRight(Time.fixedDeltaTime);
+            }
+            else if (Input.GetButton("MoveLeft"))
+            {
+                faceDir = false;
+                moving = true;
+                moveLeftRight(Time.fixedDeltaTime);
+            }
+            else
+            {
+                moving = false;
             }
         }
         else
@@ -115,22 +118,39 @@ public class PlayerCon : Entity
 
     protected override void gravStep(float time)
     {
-        if (!parrying || parryMode > 0)
+        fallSpeed += fallAccel * time;
+        float newY;
+        if (this.transform.position.y - fallSpeed > GROUND_LEVEL)
         {
-            fallSpeed += fallAccel * time;
-            float newY;
-            if (this.transform.position.y - fallSpeed > GROUND_LEVEL)
-            {
-                newY = this.transform.position.y - fallSpeed;
-            }
-            else
-            {
-                newY = GROUND_LEVEL;
-                canParry = true;
-                fallSpeed = 0.0f;
-            }
-            this.transform.position = new Vector3(this.transform.position.x, newY, this.transform.position.z);
+            newY = this.transform.position.y - fallSpeed;
         }
+        else
+        {
+            newY = GROUND_LEVEL;
+            canParry = true;
+            canShoot = true;
+            fallSpeed = 0.0f;
+        }
+        this.transform.position = new Vector3(this.transform.position.x, newY, this.transform.position.z);
+    }
+
+    void shoot()
+    {
+        int xdir = dirs[0];
+        int ydir = dirs[1];
+        if(xdir==0 && ydir == 0 && !abilities[1])
+        {
+            xdir = faceDir ? 1 : -1;
+        }
+        PlayerShot newBullet = Instantiate(bullet, new Vector3(this.transform.position.x + (xdir * xBulletOffset), this.transform.position.y + (ydir * yBulletOffset), this.transform.position.z), Quaternion.identity);
+        newBullet.setDirs(xdir, ydir);
+    }
+
+    void endShoot(int faceRight)
+    {
+        shooting = false;
+        faceDir = faceRight == 1;
+        canSwitch = true;
     }
 
     void startParryWindow()
@@ -186,5 +206,58 @@ public class PlayerCon : Entity
     public void endSwitchWindow()
     {
         canSwitch = false;
+    }
+
+    bool canDoMove()
+    {
+        return !parrying && !shooting;
+    }
+
+    void setFacingUp()
+    {
+        if (Input.GetButton("MoveUp"))
+        {
+            faceUp = 1;
+        }
+        else if (Input.GetButton("MoveDown"))
+        {
+            faceUp = -1;
+        }
+        else
+        {
+            faceUp = 0;
+        }
+    }
+
+    int pressingVert()
+    {
+        if (Input.GetButton("MoveUp"))
+        {
+            return 1;
+        }
+        else if (Input.GetButton("MoveDown"))
+        {
+            return -1;
+        }
+        return 0;
+    }
+
+    int pressingHoriz()
+    {
+        if (Input.GetButton("MoveRight"))
+        {
+            return 1;
+        }
+        else if (Input.GetButton("MoveLeft"))
+        {
+            return -1;
+        }
+        return 0;
+    }
+
+    void storeDirs()
+    {
+        dirs[0] = pressingHoriz();
+        dirs[1] = pressingVert();
     }
 }

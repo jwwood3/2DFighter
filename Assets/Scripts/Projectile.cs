@@ -7,6 +7,7 @@ public class Projectile : Damage
     [SerializeField] protected int dir;
     [SerializeField] protected float speed;
     [SerializeField] protected float BOUNDS;
+    [SerializeField] protected float YBOUND;
     [SerializeField] protected bool dead;
     [SerializeField] protected Animator anim;
 
