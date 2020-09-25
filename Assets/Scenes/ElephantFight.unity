@@ -271,6 +271,7 @@ GameObject:
   - component: {fileID: 118252241}
   - component: {fileID: 118252240}
   - component: {fileID: 118252239}
+  - component: {fileID: 118252244}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -379,6 +380,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &118252244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118252238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa8ec3d04052ebd44b4533a5663fd21d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &176765921
 GameObject:
   m_ObjectHideFlags: 0
@@ -631,7 +644,7 @@ MonoBehaviour:
   Player: {fileID: 842194985}
   enemy: {fileID: 1990393393}
   GameOverScreen: {fileID: 1931379376}
-  WinScreen: {fileID: 1904902887}
+  PowerUpScreen: {fileID: 1904902887}
   state: 1
 --- !u!20 &519420031
 Camera:
@@ -1283,7 +1296,7 @@ GameObject:
   - component: {fileID: 1615705072}
   - component: {fileID: 1615705071}
   m_Layer: 5
-  m_Name: Play_Again_Button
+  m_Name: Continue_Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1352,9 +1365,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 519420030}
-        m_TargetAssemblyTypeName: GameMaster, Assembly-CSharp
-        m_MethodName: Reset
+      - m_Target: {fileID: 118252244}
+        m_TargetAssemblyTypeName: ScreenChange, Assembly-CSharp
+        m_MethodName: DemonFight
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1414,7 +1427,7 @@ GameObject:
   - component: {fileID: 1725602091}
   - component: {fileID: 1725602090}
   m_Layer: 5
-  m_Name: Win_Frame
+  m_Name: PU_Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1706,7 +1719,7 @@ GameObject:
   - component: {fileID: 1835450349}
   - component: {fileID: 1835450348}
   m_Layer: 5
-  m_Name: Win_Label
+  m_Name: PU_Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1751,7 +1764,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: You Win
+  m_text: 'You have found magic gun powers!
+
+    Press "I" to shoot'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1779,7 +1794,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 75
+  m_fontSize: 24.5
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1795,7 +1810,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 0
+  m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -1886,7 +1901,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Play Again?
+  m_text: Continue?
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1914,7 +1929,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 22.65
+  m_fontSize: 26.05
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1974,7 +1989,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1904902888}
   m_Layer: 5
-  m_Name: Win_Screen
+  m_Name: PowerUp_Screen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2182,6 +2197,7 @@ MonoBehaviour:
   got_hit: 0
   delaying: 0
   player: {fileID: 842194985}
+  powerUp: {fileID: 7123328504060951300, guid: 188fdd3cc430ef24aae00564b3bbbaf4, type: 3}
   bulletChance: 30
   xBulletOffset: 9.5
   yBulletOffset: 1.25
@@ -2376,6 +2392,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 7465412791423448956, guid: ba23239616d407245a7d783b256c8995,
+        type: 3}
+      propertyPath: abilities.Array.size
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7465412791538347617, guid: ba23239616d407245a7d783b256c8995,
         type: 3}
       propertyPath: m_Name

@@ -32,7 +32,7 @@ public class Entity : MonoBehaviour
         
     }
 
-    protected void Update()
+    protected virtual void Update()
     {
         grounded = this.transform.position.y == GROUND_LEVEL;
         alive = this.Health != 0;

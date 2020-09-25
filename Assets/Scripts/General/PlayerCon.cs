@@ -23,7 +23,7 @@ public class PlayerCon : Entity
     void Start()
     {
         Application.targetFrameRate = 300;
-        abilities = new bool[] { true, false };// Shoot, Shoot neutral
+        //abilities = new bool[] { true, false };// Shoot, Shoot neutral
         dirs = new int[] { 0, 0 };
     }
 
@@ -173,6 +173,24 @@ public class PlayerCon : Entity
         if (col.gameObject.tag == "damage")
         {
             col.gameObject.SendMessage("dealDamage", (Entity)this.gameObject.GetComponent<PlayerCon>());
+        }
+        else if(col.gameObject.tag == "PowerUp")
+        {
+            Camera.main.gameObject.GetComponent<GameMaster>().powerUp();
+            GetPowerUp();
+            Destroy(col.gameObject);
+        }
+    }
+
+    void GetPowerUp()
+    {
+        for(int i=0;i<abilities.Length; i++)
+        {
+            if (!abilities[i])
+            {
+                abilities[i] = true;
+                break;
+            }
         }
     }
 

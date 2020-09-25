@@ -6,6 +6,7 @@ public class Enemy : Entity
 {
     [SerializeField] protected int delaying;
     [SerializeField] protected PlayerCon player;
+    [SerializeField] protected GameObject powerUp;
     // Start is called before the first frame update
     void Start()
     {
@@ -13,9 +14,13 @@ public class Enemy : Entity
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
-
+        if(alive && Health <= 0)
+        {
+            GameObject.Instantiate(powerUp, new Vector3(this.transform.position.x, 0.0f, 0.0f), Quaternion.identity);
+        }
+        base.Update();
     }
 
     public override bool isTargeted(int t)
