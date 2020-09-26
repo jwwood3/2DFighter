@@ -12,7 +12,8 @@ public class UIHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        enemy = GameObject.FindGameObjectsWithTag("Enemy")[0].GetComponent<Enemy>();
+        player = GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<PlayerCon>();
     }
 
     // Update is called once per frame

@@ -124,6 +124,8 @@ MonoBehaviour:
   dir: 1
   speed: 10
   BOUNDS: 30
+  YBOUND: 30
+  FLOORBOUND: -1.6
   dead: 0
   anim: {fileID: 3830938144249913781}
 --- !u!61 &693513998776255674

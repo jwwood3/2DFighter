@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerCon : Entity
 {
@@ -20,16 +21,65 @@ public class PlayerCon : Entity
     [SerializeField] private float xBulletOffset;
     [SerializeField] private float yBulletOffset;
     [SerializeField] private int[] dirs;
+    [SerializeField] private float shellJumpSpeedLow;
+    [SerializeField] private float shellJumpSpeedMult;
+    [SerializeField] private float slideSpeedMult;
+    public static PlayerCon player;
+
+
+    void Awake()
+    {
+        if (player == null)
+        {
+            player = this;
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+    }
+
+    void Enable()
+    {
+        /*if (player == null)
+        {
+            player = this;
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }*/
+    }
 
     // Start is called before the first frame update
     void Start()
     {
+        /*if (player == null)
+        {
+            player = this;
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }*/
         Application.targetFrameRate = 300;
         //abilities = new bool[] { true, false, false };// Shoot, Slide, Shoot neutral
         dirs = new int[] { 0, 0 };
+        DontDestroyOnLoad(gameObject);
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    bool isSliding()
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Reset();
+    }
+
+    public void resetAbilities()
+    {
+        abilities = new bool[] { false, false, false };
+    }
+
+    public bool isSliding()
     {
         return sliding || startSliding;
     }
@@ -38,6 +88,7 @@ public class PlayerCon : Entity
     {
         startSliding = false;
         sliding = true;
+        canSwitch = true;
     }
 
     // Update is called once per frame
@@ -52,17 +103,20 @@ public class PlayerCon : Entity
                 {
                     parrying = true;
                     canParry = false;
+                    sliding = false;
                 }
-                else if (abilities[0] && canShoot && Input.GetButton("Shoot"))
+                else if (abilities[0] && canShoot && Input.GetButtonDown("Shoot"))
                 {
                     shooting = true;
                     canShoot = false;
+                    sliding = false;
                 }
-                else if(!isSliding() && Input.GetButton("Slide"))
+                else if(abilities[1] && !isSliding() && Input.GetButtonDown("Slide"))
                 {
                     startSliding = true;
+                    sliding = false;
                 }
-                else if (sliding && Input.GetButton("Slide"))
+                else if (sliding && Input.GetButtonDown("Slide"))
                 {
                     sliding = false;
                     canSwitch = true;
@@ -77,6 +131,10 @@ public class PlayerCon : Entity
             {
                 jumping = false;
                 fallSpeed = 0.0f;
+            }
+            if(Input.GetButtonDown("Jump") && grounded && isSliding())
+            {
+                fallSpeed = -shellJumpSpeedLow;
             }
         }
         base.Update();
@@ -151,11 +209,32 @@ public class PlayerCon : Entity
         else
         {
             newY = GROUND_LEVEL;
-            canParry = true;
-            canShoot = true;
+            if (canDoMove()){
+                canParry = true;
+                canShoot = true;
+            }
             fallSpeed = 0.0f;
         }
         this.transform.position = new Vector3(this.transform.position.x, newY, this.transform.position.z);
+    }
+
+    protected override void moveLeftRight(float time)
+    {
+
+        int dir = faceDir ? 1 : -1;
+        float mult = sliding ? slideSpeedMult : 1.0f;
+        float newX = this.transform.position.x + (dir * time * walkSpeed * mult);
+        if (newX > RIGHT_BOUND)
+        {
+            newX = RIGHT_BOUND;
+            moving = false;
+        }
+        if (newX < LEFT_BOUND)
+        {
+            newX = LEFT_BOUND;
+            moving = false;
+        }
+        this.transform.position = new Vector3(newX, this.transform.position.y, this.transform.position.z);
     }
 
     void shoot()
@@ -241,6 +320,7 @@ public class PlayerCon : Entity
         shouldParry = false;
         invulnerabilityCounter = 0;
         canSwitch = true;
+        sliding = false;
         this.transform.position = new Vector3(0.8f * LEFT_BOUND, GROUND_LEVEL, 0.0f);
         Update();
     }
@@ -301,5 +381,25 @@ public class PlayerCon : Entity
     {
         dirs[0] = pressingHoriz();
         dirs[1] = pressingVert();
+    }
+
+    public float getShellJumpSpeed()
+    {
+        return shellJumpSpeedLow;
+    }
+
+    public float getShellJumpSpeedMult()
+    {
+        return shellJumpSpeedMult;
+    }
+
+    public void setFallSpeed(float inp)
+    {
+        fallSpeed = inp;
+    }
+
+    public bool isGrounded()
+    {
+        return grounded;
     }
 }

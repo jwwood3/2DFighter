@@ -27,6 +27,7 @@ public class ScreenChange : MonoBehaviour
 
     public void ElephantFight()
     {
+        PlayerCon.player.resetAbilities();
         SceneManager.LoadScene("ElephantFight");
     }
 

@@ -8,9 +8,9 @@ public class Enemy : Entity
     [SerializeField] protected PlayerCon player;
     [SerializeField] protected GameObject powerUp;
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
-        
+        player = PlayerCon.player;
     }
 
     // Update is called once per frame

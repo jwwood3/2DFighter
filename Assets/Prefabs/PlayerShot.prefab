@@ -132,10 +132,12 @@ MonoBehaviour:
   speed: 11
   BOUNDS: 30
   YBOUND: 30
+  FLOORBOUND: -1.7
   dead: 0
   anim: {fileID: -3418200833353343513}
   xDir: 0
   yDir: 0
+  maxTime: 4
 --- !u!95 &-3418200833353343513
 Animator:
   serializedVersion: 3

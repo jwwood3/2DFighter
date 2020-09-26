@@ -14,9 +14,10 @@ public class Elephant : Enemy
     [SerializeField] private Damage swipe;
     private System.Random gen;
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
         gen = new System.Random();
+        base.Start();
     }
 
     // Update is called once per frame

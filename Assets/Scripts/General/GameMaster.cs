@@ -15,6 +15,7 @@ public class GameMaster : MonoBehaviour
     void Start()
     {
         enemy = GameObject.FindGameObjectsWithTag("Enemy")[0].GetComponent<Enemy>();
+        Player = PlayerCon.player;
         parryStates = new int[] { 1, 0 };
     }
 

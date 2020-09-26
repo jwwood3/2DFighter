@@ -8,6 +8,12 @@ public class Shell : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
+        if (player.isSliding() && !player.isGrounded())
+        {
+            float multiplier = Input.GetButton("Jump") ? player.getShellJumpSpeedMult() : 1.0f;
+            float newFallSpeed = -player.getShellJumpSpeed() * multiplier;
+            player.setFallSpeed(newFallSpeed);
+        }
         if (col.gameObject.tag == "damage")
         {
             Damage source = col.gameObject.GetComponent<Damage>();

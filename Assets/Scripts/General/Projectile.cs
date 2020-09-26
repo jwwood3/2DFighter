@@ -8,8 +8,17 @@ public class Projectile : Damage
     [SerializeField] protected float speed;
     [SerializeField] protected float BOUNDS;
     [SerializeField] protected float YBOUND;
+    [SerializeField] protected float FLOORBOUND;
     [SerializeField] protected bool dead;
     [SerializeField] protected Animator anim;
+
+    protected virtual void Update()
+    {
+        if(this.transform.position.x>BOUNDS || this.transform.position.x<-BOUNDS || this.transform.position.y>YBOUND || this.transform.position.y < FLOORBOUND)
+        {
+            Destroy(this.gameObject);
+        }
+    }
 
     protected virtual void endDie()
     {
