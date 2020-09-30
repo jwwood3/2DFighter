@@ -273,11 +273,7 @@ public class PlayerCon : Entity
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.gameObject.tag == "damage")
-        {
-            col.gameObject.SendMessage("dealDamage", (Entity)this.gameObject.GetComponent<PlayerCon>());
-        }
-        else if(col.gameObject.tag == "PowerUp")
+        if(col.gameObject.tag == "PowerUp")
         {
             Camera.main.gameObject.GetComponent<GameMaster>().powerUp();
             GetPowerUp();

@@ -39,10 +39,7 @@ public class Enemy : Entity
 
     protected virtual void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.gameObject.tag == "damage")
-        {
-            col.gameObject.SendMessage("dealDamage", (Entity)this.gameObject.GetComponent<Enemy>());
-        }
+
     }
 
     public override void Reset()
