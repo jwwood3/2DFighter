@@ -33,35 +33,15 @@ public class PlayerCon : Entity
         {
             player = this;
         }
-        else
+        else if(player != this)
         {
             Destroy(this.gameObject);
         }
-    }
-
-    void Enable()
-    {
-        /*if (player == null)
-        {
-            player = this;
-        }
-        else
-        {
-            Destroy(this.gameObject);
-        }*/
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        /*if (player == null)
-        {
-            player = this;
-        }
-        else
-        {
-            Destroy(this.gameObject);
-        }*/
         Application.targetFrameRate = 300;
         //abilities = new bool[] { true, false, false };// Shoot, Slide, Shoot neutral
         dirs = new int[] { 0, 0 };
@@ -397,5 +377,15 @@ public class PlayerCon : Entity
     public bool isGrounded()
     {
         return grounded;
+    }
+
+    public void letParry()
+    {
+        canParry = true;
+    }
+
+    public void letShoot()
+    {
+        canShoot = true;
     }
 }

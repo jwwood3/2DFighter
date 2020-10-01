@@ -111,7 +111,7 @@ public class Elephant : Enemy
         int dir = 1;
         if (faceDir == false) dir = -1;
         WaterBall newBullet = Instantiate(bullet, new Vector3(this.transform.position.x + (dir * xBulletOffset), this.transform.position.y + (yBulletOffset), this.transform.position.z),Quaternion.identity);
-        newBullet.setDir(dir);
+        newBullet.setDirs(dir, 0);
     }
 
     public override void Reset()

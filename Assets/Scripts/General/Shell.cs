@@ -13,6 +13,8 @@ public class Shell : MonoBehaviour
             float multiplier = Input.GetButton("Jump") ? player.getShellJumpSpeedMult() : 1.0f;
             float newFallSpeed = -player.getShellJumpSpeed() * multiplier;
             player.setFallSpeed(newFallSpeed);
+            player.letParry();
+            player.letShoot();
         }
         if (col.gameObject.tag == "damage")
         {
