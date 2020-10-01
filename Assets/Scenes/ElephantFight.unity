@@ -189,7 +189,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30.5
+  m_fontSize: 21.95
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -533,7 +533,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30.5
+  m_fontSize: 21.95
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2257,7 +2257,7 @@ MonoBehaviour:
   player: {fileID: 0}
   powerUp: {fileID: 7123328504060951300, guid: 188fdd3cc430ef24aae00564b3bbbaf4, type: 3}
   bulletChance: 30
-  xBulletOffset: 9.5
+  xBulletOffset: 10.2
   yBulletOffset: 1.25
   shooting: 0
   swiping: 0
