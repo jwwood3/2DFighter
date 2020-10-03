@@ -104,7 +104,7 @@ MonoBehaviour:
   active: 1
   xDir: 1
   yDir: 0
-  speed: 9
+  speed: 14
   maxTime: 5
   BOUNDS: 30
   YBOUND: 30

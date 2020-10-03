@@ -204,14 +204,14 @@ public class PlayerCon : Entity
         int dir = faceDir ? 1 : -1;
         float mult = sliding ? slideSpeedMult : 1.0f;
         float newX = this.transform.position.x + (dir * time * walkSpeed * mult);
-        if (newX > RIGHT_BOUND)
+        if (newX > H_BOUND)
         {
-            newX = RIGHT_BOUND;
+            newX = H_BOUND;
             moving = false;
         }
-        if (newX < LEFT_BOUND)
+        if (newX < -H_BOUND)
         {
-            newX = LEFT_BOUND;
+            newX = -H_BOUND;
             moving = false;
         }
         this.transform.position = new Vector3(newX, this.transform.position.y, this.transform.position.z);
@@ -297,7 +297,7 @@ public class PlayerCon : Entity
         invulnerabilityCounter = 0;
         canSwitch = true;
         sliding = false;
-        this.transform.position = new Vector3(0.8f * LEFT_BOUND, GROUND_LEVEL, 0.0f);
+        this.transform.position = new Vector3(0.8f * -H_BOUND, GROUND_LEVEL, 0.0f);
         Update();
     }
 

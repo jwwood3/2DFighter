@@ -8,7 +8,7 @@ public class Enemy : Entity
     [SerializeField] protected PlayerCon player;
     [SerializeField] protected GameObject powerUp;
     // Start is called before the first frame update
-    protected virtual void Start()
+    protected override void Start()
     {
         player = PlayerCon.player;
     }
@@ -46,6 +46,6 @@ public class Enemy : Entity
     {
         base.Reset();
         delaying = 0;
-        this.transform.position = new Vector3(0.8f*RIGHT_BOUND,GROUND_LEVEL, 0.0f);
+        this.transform.position = new Vector3(0.8f*H_BOUND,GROUND_LEVEL, 0.0f);
     }
 }

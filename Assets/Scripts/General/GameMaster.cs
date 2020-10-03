@@ -10,6 +10,7 @@ public class GameMaster : MonoBehaviour
     [SerializeField] private GameObject GameOverScreen;
     [SerializeField] private GameObject PowerUpScreen;
     [SerializeField] private int state = 1;
+    [SerializeField] private static System.Random gen;
     private int[] parryStates;
 
     void Start()
@@ -17,6 +18,7 @@ public class GameMaster : MonoBehaviour
         enemy = GameObject.FindGameObjectsWithTag("Enemy")[0].GetComponent<Enemy>();
         Player = PlayerCon.player;
         parryStates = new int[] { 1, 0 };
+        gen = new System.Random();
     }
 
     void Update()
@@ -57,5 +59,28 @@ public class GameMaster : MonoBehaviour
     public void powerUp()
     {
         PowerUpScreen.SetActive(true);
+    }
+
+    public static Vector3 getRandomPosition(float y_max, float y_min, float x_max, float x_min)
+    {
+        if (gen == null)
+        {
+            gen = new System.Random();
+        }
+        float y_pos = ((float)gen.Next((int)(y_min * 100.0f), (int)(y_max * 100.0f))) / 100.0f;
+        float x_pos = ((float)gen.Next((int)(x_min * 100.0f), (int)(x_max * 100.0f))) / 100.0f;
+        return new Vector3(x_pos, y_pos, 0);
+    }
+
+    public static Vector3 getGroundPosition(Entity go, Vector3 pos)
+    {
+        if (gen == null)
+        {
+            gen = new System.Random();
+        }
+        float x_min = go.gameObject.transform.position.x < pos.x ? go.gameObject.transform.position.x : pos.x;
+        float x_max = go.gameObject.transform.position.x > pos.x ? go.gameObject.transform.position.x : pos.x;
+        float x_pos = ((float)gen.Next((int)(x_min * 100.0f), (int)(x_max * 100.0f))) / 100.0f;
+        return new Vector3(x_pos, go.getGround(), 0);
     }
 }

@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class Bat : Enemy
 {
-    [SerializeField] private float dashChance = 5.0f;
+    [SerializeField] private float dashChance = 20;
+    [SerializeField] private float shootChance = 70;
     [SerializeField] private float xBulletOffset = 2.0f;
     [SerializeField] private float yBulletOffset = 2.0f;
     [SerializeField] private bool shooting = false;
     [SerializeField] private bool dashing = false;
+    [SerializeField] private int dashPhase;
+    [SerializeField] private float flyHeight;
     [SerializeField] private Bat_Spike bullet;
+    [SerializeField] private Vector3 ground_target;
+    [SerializeField] private Damage bodyBox;
     private System.Random gen;
     // Start is called before the first frame update
     protected override void Start()
@@ -19,24 +24,21 @@ public class Bat : Enemy
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
         base.Update();
         anim.SetInteger("delaying", delaying);
         anim.SetBool("shooting", shooting);
+        Debug.Log("pos: " + transform.position);
     }
 
-    void FixedUpdate()
+    protected override void FixedUpdate()
     {
-        float dec = dashChance / 100.0f;
-        float prob = (float)(1.0f - Mathf.Log(1.0f - dec, 120));
         if (gen is null)
         {
             gen = new System.Random();
         }
         base.Update();
-        anim.SetInteger("delaying", delaying);
-        anim.SetBool("shooting", shooting);
         if (alive)
         {
             if (delaying > 0)
@@ -45,28 +47,53 @@ public class Bat : Enemy
             }
             if (!shooting && !dashing)
             {
-                int num = gen.Next(1, 1001);
-                if (faceDir != ((player.transform.position.x - transform.position.x) > 0))
-                {
-                    delaying = 2;
-                    faceDir = ((player.transform.position.x - transform.position.x) > 0);
-                    return;
-                }
-                faceDir = (player.transform.position.x - transform.position.x) > 0;
-                if (num < (1000.0f * prob))
+                activateHitbox();
+                int num = gen.Next(1, 101);
+                if (num < shootChance)
                 {
                     shooting = true;
                     return;
                 }
-
-                if (num > ((1000.0f - (1000.0f * prob)) / 2.0f + (1000.0f * prob)))
+                else if (num < shootChance+dashChance)
                 {
-                    //dashing = true;
+                    dashing = true;
+                    dashPhase = 1;
+                    target = GameMaster.getRandomPosition(flyHeight, GROUND_LEVEL, H_BOUND, -H_BOUND);
+                    ground_target = GameMaster.getGroundPosition(this, target);
                     return;
                 }
-
+                else
+                {
+                    delaying = 3;
+                }
+            }
+            if (dashing)
+            {
+                if(dashPhase == 1)
+                {
+                    moveTowards(ground_target, Time.fixedDeltaTime);
+                    if (isAt(ground_target))
+                    {
+                        dashPhase = 2;
+                    }
+                }
+                else if(dashPhase == 2)
+                {
+                    moveTowards(target, Time.fixedDeltaTime);
+                    if (isAt(target))
+                    {
+                        dashPhase = 0;
+                        dashing = false;
+                        delaying = 3;
+                    }
+                }
             }
         }
+    }
+
+    void activateHitbox()
+    {
+        bodyBox.activate();
     }
 
     void stopShooting()
@@ -74,12 +101,6 @@ public class Bat : Enemy
         shooting = false;
         delaying = 1;
 
-    }
-
-    void stopdashing()
-    {
-        dashing = false;
-        delaying = 1;
     }
 
     void shoot(int num)

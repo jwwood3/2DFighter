@@ -20,14 +20,16 @@ public class Entity : MonoBehaviour
     [SerializeField] protected int MaxHealth;
     [SerializeField] protected int Health;
     [SerializeField] protected bool alive = true;
-    [SerializeField] protected float RIGHT_BOUND;
-    [SerializeField] protected float LEFT_BOUND;
+    [SerializeField] protected float H_BOUND;
+    [SerializeField] protected float TOP_BOUND;
     [SerializeField] public Animator anim;
     [SerializeField] protected bool invulnerable;
     [SerializeField] protected bool got_hit;
+    [SerializeField] protected Vector3 target;
+    [SerializeField] protected float positionCheck;
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         
     }
@@ -47,7 +49,7 @@ public class Entity : MonoBehaviour
     }
 
     // Update is called once per frame
-    protected void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         if (jumping)
         {
@@ -79,14 +81,14 @@ public class Entity : MonoBehaviour
         int dir;
         if (faceDir) { dir = 1; } else { dir = -1; }
         float newX = this.transform.position.x + (dir * time * walkSpeed);
-        if (newX > RIGHT_BOUND)
+        if (newX > H_BOUND)
         {
-            newX = RIGHT_BOUND;
+            newX = H_BOUND;
             moving = false;
         }
-        if (newX < LEFT_BOUND)
+        if (newX < -H_BOUND)
         {
-            newX = LEFT_BOUND;
+            newX = -H_BOUND;
             moving = false;
         }
         this.transform.position = new Vector3(newX, this.transform.position.y, this.transform.position.z);
@@ -153,5 +155,33 @@ public class Entity : MonoBehaviour
         alive = true;
         got_hit = false;
         resetting = true;
+    }
+
+    protected void moveTowards(Vector3 pos, float t)
+    {
+        faceDir = transform.position.x < pos.x;
+        faceUp = transform.position.y + 5 < pos.y ? 1 : (transform.position.y - 5 > pos.y ? -1 : 0);
+        Vector3 dir = Vector3.Normalize(new Vector3(pos.x - transform.position.x, pos.y - transform.position.y, pos.z - transform.position.z))*walkSpeed;
+        transform.position = new Vector3(transform.position.x + (dir.x * t), transform.position.y + (dir.y * t), transform.position.z + (dir.z * t));
+    }
+
+    protected bool isAt(Vector3 pos)
+    {
+        return new Vector3(pos.x - transform.position.x, pos.y - transform.position.y, pos.z - transform.position.z).magnitude < positionCheck;
+    }
+
+    public float getGround()
+    {
+        return GROUND_LEVEL;
+    }
+
+    public float getSky()
+    {
+        return TOP_BOUND;
+    }
+
+    public float getHBound()
+    {
+        return H_BOUND;
     }
 }
